@@ -1,2 +1,2 @@
 # Nahrungssicherheitsspiel
-Erste Implementation der Spielidee für das Nahrungssicherheitsspiel der Polisis Gruppe (http://www.polises.de/)
+Erste Implementation der Spielidee für das Nahrungssicherheitsspiel der Polises Gruppe (http://www.polises.de/)
