@@ -1,0 +1,120 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Nahrungssicherheitsspiel</title>
+        <script src="//cdn.jsdelivr.net/phaser/2.5.0/phaser.min.js"></script>
+    </head>
+    <body>
+
+    <script type="text/javascript">
+window.onload = function() {
+
+var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render });
+
+function preload() {
+
+    game.load.image('background','map_neu.png');
+    game.load.image('player','spirit.png');
+    game.load.image('blumenladen_tuer','blumenladen_tuer.png');
+    game.load.image('blumenladen_tuer_innen','blumenladen_tuer2.png');
+    game.load.image('blumenladen','blumenladen.png');
+    game.load.image('blumenladen_frau','blumenladen_frau.png');
+    game.load.image('blumenladen_tisch','blumenladen_tisch.png');
+
+}
+
+var player;
+var cursors;
+var targetX = 0;
+var targetY = 0;
+var playerH = 65;
+var playerW = 45;
+
+function create() {
+
+    game.add.tileSprite(0, 0, 1391, 983, 'background');
+    game.world.setBounds(0, 0, 1391, 983);
+
+    game.physics.startSystem(Phaser.Physics.ARCADE);
+
+    blumenladen_tuer = game.add.image(690, 350, 'blumenladen_tuer');
+    blumenladen_tuer.inputEnabled = true;
+    blumenladen_tuer.input.useHandCursor = true;
+    blumenladen_tuer.events.onInputDown.add(enterBlumenladen);
+
+    player = game.add.sprite(game.world.centerX, game.world.centerY, 'player');
+    game.physics.arcade.enable(player);
+    player.body.fixedRotation = true;
+    game.input.onDown.add(movePlayer, this);
+
+    game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
+}
+
+function movePlayer(pointer) {
+    targetX = (pointer.x + game.camera.x) - playerW/2;
+    targetY = (pointer.y + game.camera.y) - playerH/2;
+    game.physics.arcade.moveToXY(player,targetX,targetY, 200);
+}
+
+function enterBlumenladen() {
+  blumenladen = game.add.tileSprite(0, 0, 800, 600, 'blumenladen');
+  game.world.setBounds(0, 0, 800, 600);
+
+  blumenladen_tuer_innen = game.add.image(370, 510, 'blumenladen_tuer_innen');
+  blumenladen_tuer_innen.inputEnabled = true;
+  blumenladen_tuer_innen.input.useHandCursor = true;
+  blumenladen_tuer_innen.events.onInputDown.add(leaveBlumenladen);
+
+  blumenladen_frau = game.add.sprite(520, 197, 'blumenladen_frau');
+  blumenladen_frau.inputEnabled = true;
+  blumenladen_frau.input.useHandCursor = true;
+  blumenladen_frau.events.onInputDown.add(talkToBlumenladenFrau);
+
+  blumenladen_tisch = game.add.image(396, 242, 'blumenladen_tisch');
+
+  player.x = 400;
+  player.y = 500;
+  player.bringToTop();
+  player.body.velocity.setTo(0, 0);
+}
+
+function leaveBlumenladen() {
+  blumenladen.kill();
+  blumenladen_tuer_innen.kill();
+  blumenladen_tisch.kill();
+  blumenladen_frau.kill();
+  game.world.setBounds(0, 0, 1391, 983);
+  
+
+  player.x = 690;
+  player.y = 350;
+  player.bringToTop();
+  player.body.velocity.setTo(0, 0);
+
+}
+
+function talkToBlumenladenFrau() {
+  player.body.velocity.setTo(0, 0);
+  var style = { font: "20px Arial", fill: "#ff0044", align: "center" };
+  text = game.add.text(500, 140, "Hallo ich bin Birgit,\n wie kann ich dir helfen?", style);
+  game.time.events.add(Phaser.Timer.SECOND * 2, function killText() {text.kill();}, this);
+}
+
+function update() {
+  if (game.physics.arcade.distanceToXY(player,targetX,targetY) < 10) {
+    player.body.velocity.setTo(0, 0);
+  }
+}
+
+function render() {
+
+
+}
+
+    };
+
+    </script>
+
+    </body>
+</html>
